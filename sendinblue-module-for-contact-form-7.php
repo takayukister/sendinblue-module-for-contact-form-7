@@ -11,31 +11,35 @@ Version: 0.7-dev
 define( 'CF7SENDINBLUE_PLUGIN', __FILE__ );
 
 define( 'CF7SENDINBLUE_PLUGIN_BASENAME',
-  plugin_basename( CF7SENDINBLUE_PLUGIN )
+	plugin_basename( CF7SENDINBLUE_PLUGIN )
 );
 
 define( 'CF7SENDINBLUE_PLUGIN_NAME',
-  trim( dirname( CF7SENDINBLUE_PLUGIN_BASENAME ), '/' )
+	trim( dirname( CF7SENDINBLUE_PLUGIN_BASENAME ), '/' )
 );
 
 define( 'CF7SENDINBLUE_PLUGIN_DIR',
-  untrailingslashit( dirname( CF7SENDINBLUE_PLUGIN ) )
+	untrailingslashit( dirname( CF7SENDINBLUE_PLUGIN ) )
 );
 
 define( 'CF7SENDINBLUE_PLUGIN_MODULES_DIR',
-  CF7SENDINBLUE_PLUGIN_DIR . '/modules'
+	CF7SENDINBLUE_PLUGIN_DIR . '/modules'
 );
 
 add_action( 'plugins_loaded', function() {
-  $dir = CF7SENDINBLUE_PLUGIN_MODULES_DIR;
+	if ( ! class_exists( 'WPCF7_Service' ) ) {
+		return;
+	}
 
-  if ( empty( $dir ) or ! is_dir( $dir ) ) {
-    return false;
-  }
+	$dir = CF7SENDINBLUE_PLUGIN_MODULES_DIR;
 
-  $file = path_join( $dir, 'sendinblue/sendinblue.php' );
+	if ( empty( $dir ) or ! is_dir( $dir ) ) {
+		return false;
+	}
 
-  if ( file_exists( $file ) ) {
-    include_once $file;
-  }
+	$file = path_join( $dir, 'sendinblue/sendinblue.php' );
+
+	if ( file_exists( $file ) ) {
+		include_once $file;
+	}
 }, 20, 0 );
