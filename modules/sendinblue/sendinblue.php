@@ -13,7 +13,7 @@ function wpcf7_sendinblue_register_service() {
 class WPCF7_Sendinblue extends WPCF7_Service {
 
 	private static $instance;
-	private $api_keys;
+	private $api_key;
 
 	public static function get_instance() {
 		if ( empty( self::$instance ) ) {
@@ -26,12 +26,8 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 	private function __construct() {
 		$option = WPCF7::get_option( 'sendinblue' );
 
-		if ( isset( $option['api_keys']['publishable'] )
-		and isset( $option['api_keys']['secret'] ) ) {
-			$this->api_keys = array(
-				'publishable' => $option['api_keys']['publishable'],
-				'secret' => $option['api_keys']['secret'],
-			);
+		if ( isset( $option['api_key'] ) ) {
+			$this->api_key = $option['api_key'];
 		}
 	}
 
@@ -40,11 +36,11 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 	}
 
 	public function is_active() {
-		return (bool) $this->get_api_keys();
+		return (bool) $this->get_api_key();
 	}
 
-	public function get_api_keys() {
-		return $this->api_keys;
+	public function get_api_key() {
+		return $this->api_key;
 	}
 
 	public function get_categories() {
@@ -80,12 +76,12 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 
 	protected function save_data() {
 		WPCF7::update_option( 'sendinblue', array(
-			'api_keys' => $this->api_keys,
+			'api_key' => $this->api_key,
 		) );
 	}
 
 	protected function reset_data() {
-		$this->api_keys = null;
+		$this->api_key = null;
 		$this->save_data();
 	}
 
@@ -97,15 +93,10 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 				$this->reset_data();
 				$redirect_to = $this->menu_page_url( 'action=setup' );
 			} else {
-				$publishable = isset( $_POST['publishable'] ) ?
-					trim( $_POST['publishable'] ) : '';
-				$secret = isset( $_POST['secret'] ) ? trim( $_POST['secret'] ) : '';
+				$api_key = isset( $_POST['api_key'] ) ? trim( $_POST['api_key'] ) : '';
 
-				if ( $publishable and $secret ) {
-					$this->api_keys = array(
-						'publishable' => $publishable,
-						'secret' => $secret,
-					);
+				if ( $api_key ) {
+					$this->api_key = $api_key;
 					$this->save_data();
 
 					$redirect_to = $this->menu_page_url( array(
@@ -160,21 +151,13 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 			echo sprintf(
 				'<p><a href="%1$s" class="button">%2$s</a></p>',
 				esc_url( $this->menu_page_url( 'action=setup' ) ),
-				esc_html( __( 'Setup Integration', 'contact-form-7' ) )
+				esc_html( __( 'Setup integration', 'contact-form-7' ) )
 			);
 		}
 	}
 
 	private function display_setup() {
-		$api_keys = $this->get_api_keys();
-
-		if ( $api_keys ) {
-			$publishable = $api_keys['publishable'];
-			$secret = $api_keys['secret'];
-		} else {
-			$publishable = '';
-			$secret = '';
-		}
+		$api_key = $this->get_api_key();
 
 ?>
 <form method="post" action="<?php echo esc_url( $this->menu_page_url( 'action=setup' ) ); ?>">
@@ -182,35 +165,18 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 <table class="form-table">
 <tbody>
 <tr>
-	<th scope="row"><label for="publishable"><?php echo esc_html( __( 'Publishable Key', 'contact-form-7' ) ); ?></label></th>
+	<th scope="row"><label for="publishable"><?php echo esc_html( __( 'API key', 'contact-form-7' ) ); ?></label></th>
 	<td><?php
 		if ( $this->is_active() ) {
-			echo esc_html( $publishable );
+			echo esc_html( wpcf7_mask_password( $api_key ) );
 			echo sprintf(
-				'<input type="hidden" value="%s" id="publishable" name="publishable" />',
-				esc_attr( $publishable )
+				'<input type="hidden" value="%s" id="api_key" name="api_key" />',
+				esc_attr( $api_key )
 			);
 		} else {
 			echo sprintf(
-				'<input type="text" aria-required="true" value="%s" id="publishable" name="publishable" class="regular-text code" />',
-				esc_attr( $publishable )
-			);
-		}
-	?></td>
-</tr>
-<tr>
-	<th scope="row"><label for="secret"><?php echo esc_html( __( 'Secret Key', 'contact-form-7' ) ); ?></label></th>
-	<td><?php
-		if ( $this->is_active() ) {
-			echo esc_html( wpcf7_mask_password( $secret ) );
-			echo sprintf(
-				'<input type="hidden" value="%s" id="secret" name="secret" />',
-				esc_attr( $secret )
-			);
-		} else {
-			echo sprintf(
-				'<input type="text" aria-required="true" value="%s" id="secret" name="secret" class="regular-text code" />',
-				esc_attr( $secret )
+				'<input type="text" aria-required="true" value="%s" id="api_key" name="api_key" class="regular-text code" />',
+				esc_attr( $api_key )
 			);
 		}
 	?></td>
@@ -220,11 +186,11 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 <?php
 		if ( $this->is_active() ) {
 			submit_button(
-				_x( 'Remove Keys', 'API keys', 'contact-form-7' ),
+				_x( 'Remove key', 'API keys', 'contact-form-7' ),
 				'small', 'reset'
 			);
 		} else {
-			submit_button( __( 'Save Changes', 'contact-form-7' ) );
+			submit_button( __( 'Save changes', 'contact-form-7' ) );
 		}
 ?>
 </form>
