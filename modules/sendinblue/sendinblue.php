@@ -10,6 +10,40 @@ function wpcf7_sendinblue_register_service() {
 	);
 }
 
+add_action( 'wpcf7_submit', 'wpcf7_sendinblue_submit', 10, 2 );
+
+function wpcf7_sendinblue_submit( $contact_form, $result ) {
+	$service = WPCF7_Sendinblue::get_instance();
+
+	if ( ! $service->is_active() ) {
+		return;
+	}
+
+	if ( $contact_form->in_demo_mode() ) {
+		return;
+	}
+
+	$do_submit = true;
+
+	if ( empty( $result['status'] )
+	or ! in_array( $result['status'], array( 'mail_sent' ) ) ) {
+		$do_submit = false;
+	}
+
+	if ( ! $do_submit ) {
+		return;
+	}
+
+	$submission = WPCF7_Submission::get_instance();
+
+	$properties = array(
+		'email' => $submission->get_posted_data( 'your-email' ),
+		'attributes' => $submission->get_posted_data(),
+	);
+
+	$service->create_contact( $properties );
+}
+
 class WPCF7_Sendinblue extends WPCF7_Service {
 
 	private static $instance;
@@ -55,6 +89,31 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 			'https://www.sendinblue.com/',
 			'sendinblue.com'
 		);
+	}
+
+	public function create_contact( $properties ) {
+		$endpoint = 'https://api.sendinblue.com/v3/contacts';
+
+		$request = array(
+			'headers' => array(
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json; charset=utf-8',
+				'API-Key' => $this->get_api_key(),
+			),
+			'body' => json_encode( $properties ),
+		);
+
+		$response = wp_remote_post( $endpoint, $request );
+
+		if ( 400 <= (int) wp_remote_retrieve_response_code( $response ) ) {
+			if ( WP_DEBUG ) {
+				$this->log( $endpoint, $request, $response );
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 	protected function log( $url, $request, $response ) {
