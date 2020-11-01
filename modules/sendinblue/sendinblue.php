@@ -86,7 +86,7 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 
 	public function link() {
 		echo wpcf7_link(
-			'https://www.sendinblue.com/',
+			'https://www.sendinblue.com/?tap_a=30591-fb13f0&tap_s=1031580-b1bb1d',
 			'sendinblue.com'
 		);
 	}
