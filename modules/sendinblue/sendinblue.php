@@ -128,14 +128,22 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 				$this->reset_data();
 				$redirect_to = $this->menu_page_url( 'action=setup' );
 			} else {
-				$api_key = isset( $_POST['api_key'] ) ? trim( $_POST['api_key'] ) : '';
+				$this->api_key = isset( $_POST['api_key'] )
+					? trim( $_POST['api_key'] )
+					: '';
 
-				if ( $api_key ) {
-					$this->api_key = $api_key;
-					$this->save_data();
+				$confirmed = $this->confirm_key();
 
+				if ( true === $confirmed ) {
 					$redirect_to = $this->menu_page_url( array(
 						'message' => 'success',
+					) );
+
+					$this->save_data();
+				} elseif ( false === $confirmed ) {
+					$redirect_to = $this->menu_page_url( array(
+						'action' => 'setup',
+						'message' => 'unauthorized',
 					) );
 				} else {
 					$redirect_to = $this->menu_page_url( array(
@@ -151,16 +159,27 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 	}
 
 	public function admin_notice( $message = '' ) {
+		if ( 'unauthorized' == $message ) {
+			echo sprintf(
+				'<div class="notice notice-error is-dismissible"><p><strong>%1$s</strong>: %2$s</p></div>',
+				esc_html( __( "Error", 'contact-form-7' ) ),
+				esc_html( __( "You have not been authenticated. Make sure the provided API key is correct.", 'contact-form-7' ) )
+			);
+		}
+
 		if ( 'invalid' == $message ) {
 			echo sprintf(
-				'<div class="error notice notice-error is-dismissible"><p><strong>%1$s</strong>: %2$s</p></div>',
+				'<div class="notice notice-error is-dismissible"><p><strong>%1$s</strong>: %2$s</p></div>',
 				esc_html( __( "Error", 'contact-form-7' ) ),
-				esc_html( __( "Invalid key values.", 'contact-form-7' ) ) );
+				esc_html( __( "Invalid key values.", 'contact-form-7' ) )
+			);
 		}
 
 		if ( 'success' == $message ) {
-			echo sprintf( '<div class="updated notice notice-success is-dismissible"><p>%s</p></div>',
-				esc_html( __( 'Settings saved.', 'contact-form-7' ) ) );
+			echo sprintf(
+				'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+				esc_html( __( 'Settings saved.', 'contact-form-7' ) )
+			);
 		}
 	}
 
@@ -241,6 +260,31 @@ class WPCF7_Sendinblue extends WPCF7_Service {
  */
 trait WPCF7_Sendinblue_API {
 
+
+	public function confirm_key() {
+		$endpoint = 'https://api.sendinblue.com/v3/account';
+
+		$request = array(
+			'headers' => array(
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json; charset=utf-8',
+				'API-Key' => $this->get_api_key(),
+			),
+		);
+
+		$response = wp_remote_get( $endpoint, $request );
+		$response_code = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( 401 === $response_code ) { // 401 Unauthorized
+			return false;
+		} elseif ( 400 <= $response_code ) {
+			return null;
+		} else {
+			return true;
+		}
+	}
+
+
 	public function create_contact( $properties ) {
 		$endpoint = 'https://api.sendinblue.com/v3/contacts';
 
@@ -265,5 +309,6 @@ trait WPCF7_Sendinblue_API {
 
 		return true;
 	}
+
 
 }
