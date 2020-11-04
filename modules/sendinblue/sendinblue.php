@@ -1,5 +1,11 @@
 <?php
 
+include_once path_join(
+	CF7SENDINBLUE_PLUGIN_MODULES_DIR,
+	'sendinblue/service.php'
+);
+
+
 add_action( 'wpcf7_init', 'wpcf7_sendinblue_register_service', 10, 0 );
 
 function wpcf7_sendinblue_register_service() {
