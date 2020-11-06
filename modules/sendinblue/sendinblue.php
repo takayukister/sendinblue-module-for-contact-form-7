@@ -56,28 +56,33 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
  *
  * This improves wpcf7_mask_password().
  *
+ * @param int $right Length of right-hand unmasked text. Default 0.
+ * @param int $left Length of left-hand unmasked text. Default 0.
+ *
  * @todo Merge into wpcf7_mask_password().
  */
-function wpcf7_mask_password_improved( $text, $deprecated = null ) {
+function wpcf7_mask_password_improved( $text, $right = 0, $left = 0 ) {
 	$length = strlen( $text );
 
-	if ( $length <= 4 ) {
-		$text = str_repeat( '*', $length );
-	} elseif ( $length <= 8 ) {
-		$text = str_repeat( '*', $length - 2 )
-			. substr( $text, -2 );
-	} elseif ( $length <= 24 ) {
-		$text = str_repeat( '*', $length - 4 )
-			. substr( $text, -4 );
-	} elseif ( $length <= 48 ) {
-		$text = substr( $text, 0, 4 )
-			. str_repeat( '*', $length - 8 )
-			. substr( $text, -4 );
-	} else {
-		$text = substr( $text, 0, 4 )
-			. str_repeat( '*', 40 )
-			. substr( $text, -4 );
+	$right = absint( $right );
+	$left = absint( $left );
+
+	if ( $length < $right + $left ) {
+		$right = $left = 0;
 	}
+
+	if ( $length <= 48 ) {
+		$masked = str_repeat( '*', $length - ( $right + $left ) );
+	} elseif ( $right + $left < 48 ) {
+		$masked = str_repeat( '*', 48 - ( $right + $left ) );
+	} else {
+		$masked = '****';
+	}
+
+	$left_unmasked = $left ? substr( $text, 0, $left ) : '';
+	$right_unmasked = $right ? substr( $text, -1 * $right ) : '';
+
+	$text = $left_unmasked . $masked . $right_unmasked;
 
 	return $text;
 }
