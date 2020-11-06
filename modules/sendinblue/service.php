@@ -235,12 +235,14 @@ trait WPCF7_Sendinblue_API {
 		$response = wp_remote_get( $endpoint, $request );
 		$response_code = (int) wp_remote_retrieve_response_code( $response );
 
-		if ( 401 === $response_code ) { // 401 Unauthorized
+		if ( 200 === $response_code ) { // 200 OK
+			return true;
+		} elseif ( 401 === $response_code ) { // 401 Unauthorized
 			return false;
 		} elseif ( 400 <= $response_code ) {
-			return null;
-		} else {
-			return true;
+			if ( WP_DEBUG ) {
+				$this->log( $endpoint, $request, $response );
+			}
 		}
 	}
 
@@ -258,16 +260,19 @@ trait WPCF7_Sendinblue_API {
 		);
 
 		$response = wp_remote_post( $endpoint, $request );
+		$response_code = (int) wp_remote_retrieve_response_code( $response );
 
-		if ( 400 <= (int) wp_remote_retrieve_response_code( $response ) ) {
+		if ( 201 === $response_code ) { // 201 Contact created
+			return true;
+		} elseif ( 204 === $response_code ) { // 204 Contact updated
+			return true;
+		} elseif ( 400 <= $response_code ) {
 			if ( WP_DEBUG ) {
 				$this->log( $endpoint, $request, $response );
 			}
-
-			return false;
 		}
 
-		return true;
+		return false;
 	}
 
 
