@@ -276,4 +276,31 @@ trait WPCF7_Sendinblue_API {
 	}
 
 
+	public function send_email( $properties ) {
+		$endpoint = 'https://api.sendinblue.com/v3/smtp/email';
+
+		$request = array(
+			'headers' => array(
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json; charset=utf-8',
+				'API-Key' => $this->get_api_key(),
+			),
+			'body' => json_encode( $properties ),
+		);
+
+		$response = wp_remote_post( $endpoint, $request );
+		$response_code = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( 201 === $response_code ) { // 201 Transactional email sent
+			return true;
+		} elseif ( 400 <= $response_code ) {
+			if ( WP_DEBUG ) {
+				$this->log( $endpoint, $request, $response );
+			}
+		}
+
+		return false;
+	}
+
+
 }

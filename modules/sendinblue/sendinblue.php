@@ -16,16 +16,17 @@ function wpcf7_sendinblue_register_service() {
 	);
 }
 
+
 add_action( 'wpcf7_submit', 'wpcf7_sendinblue_submit', 10, 2 );
 
 function wpcf7_sendinblue_submit( $contact_form, $result ) {
-	$service = WPCF7_Sendinblue::get_instance();
-
-	if ( ! $service->is_active() ) {
+	if ( $contact_form->in_demo_mode() ) {
 		return;
 	}
 
-	if ( $contact_form->in_demo_mode() ) {
+	$service = WPCF7_Sendinblue::get_instance();
+
+	if ( ! $service->is_active() ) {
 		return;
 	}
 
@@ -48,6 +49,47 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 	);
 
 	$service->create_contact( $properties );
+}
+
+
+add_action( 'wpcf7_before_send_mail', 'wpcf7_sendinblue_send_email', 10, 3 );
+
+function wpcf7_sendinblue_send_email( $contact_form, &$abort, $submission ) {
+	if ( $abort or ! $submission->is( 'init' ) ) {
+		return;
+	}
+
+	if ( $contact_form->in_demo_mode() ) {
+		return;
+	}
+
+	$service = WPCF7_Sendinblue::get_instance();
+
+	if ( ! $service->is_active() ) {
+		return;
+	}
+
+	$properties = array(
+		'sender' => array(
+			'name' => 'Tester Testerson',
+			'email' => 'testerson@example.com',
+		),
+		'to' => array(
+			array(
+				'name' => 'Tester Testerson Jr.',
+				'email' => 'testersonjr@example.com',
+			),
+		),
+		'subject' => 'Test',
+		'htmlContent' => "<strong>Hello!</strong> This is a test message.",
+		'textContent' => "Hello! This is a test message.",
+	);
+
+	if ( $service->send_email( $properties ) ) {
+		$submission->set_status( 'mail_sent' );
+		$submission->set_response( $contact_form->message( 'mail_sent_ok' ) );
+		$abort = true;
+	}
 }
 
 
