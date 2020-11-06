@@ -182,7 +182,7 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 	<th scope="row"><label for="publishable"><?php echo esc_html( __( 'API key', 'contact-form-7' ) ); ?></label></th>
 	<td><?php
 		if ( $this->is_active() ) {
-			echo esc_html( wpcf7_mask_password( $api_key ) );
+			echo esc_html( wpcf7_mask_password_improved( $api_key ) );
 			echo sprintf(
 				'<input type="hidden" value="%s" id="api_key" name="api_key" />',
 				esc_attr( $api_key )

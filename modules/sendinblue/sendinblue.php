@@ -49,3 +49,35 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 
 	$service->create_contact( $properties );
 }
+
+
+/**
+ * Masks a password with a string of asterisks (*).
+ *
+ * This improves wpcf7_mask_password().
+ *
+ * @todo Merge into wpcf7_mask_password().
+ */
+function wpcf7_mask_password_improved( $text, $deprecated = null ) {
+	$length = strlen( $text );
+
+	if ( $length <= 4 ) {
+		$text = str_repeat( '*', $length );
+	} elseif ( $length <= 8 ) {
+		$text = str_repeat( '*', $length - 2 )
+			. substr( $text, -2 );
+	} elseif ( $length <= 24 ) {
+		$text = str_repeat( '*', $length - 4 )
+			. substr( $text, -4 );
+	} elseif ( $length <= 48 ) {
+		$text = substr( $text, 0, 4 )
+			. str_repeat( '*', $length - 8 )
+			. substr( $text, -4 );
+	} else {
+		$text = substr( $text, 0, 4 )
+			. str_repeat( '*', 40 )
+			. substr( $text, -4 );
+	}
+
+	return $text;
+}
