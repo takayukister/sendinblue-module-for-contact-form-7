@@ -292,7 +292,8 @@ trait WPCF7_Sendinblue_API {
 		$response_code = (int) wp_remote_retrieve_response_code( $response );
 
 		if ( 201 === $response_code ) { // 201 Transactional email sent
-			return true;
+			$message_id = wp_remote_retrieve_body( $response );
+			return $message_id;
 		} elseif ( 400 <= $response_code ) {
 			if ( WP_DEBUG ) {
 				$this->log( $endpoint, $request, $response );
