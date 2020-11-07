@@ -52,14 +52,14 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 }
 
 
-add_action( 'wpcf7_before_send_mail', 'wpcf7_sendinblue_send_email', 10, 3 );
+add_action( 'wpcf7_submit', 'wpcf7_sendinblue_send_email', 10, 2 );
 
-function wpcf7_sendinblue_send_email( $contact_form, &$abort, $submission ) {
-	if ( $abort or ! $submission->is( 'init' ) ) {
+function wpcf7_sendinblue_send_email( $contact_form, $result ) {
+	if ( $contact_form->in_demo_mode() ) {
 		return;
 	}
 
-	if ( $contact_form->in_demo_mode() ) {
+	if ( empty( $result['posted_data_hash'] ) ) {
 		return;
 	}
 
@@ -85,11 +85,7 @@ function wpcf7_sendinblue_send_email( $contact_form, &$abort, $submission ) {
 		'textContent' => "Hello! This is a test message.",
 	);
 
-	if ( $service->send_email( $properties ) ) {
-		$submission->set_status( 'mail_sent' );
-		$submission->set_response( $contact_form->message( 'mail_sent_ok' ) );
-		$abort = true;
-	}
+	$service->send_email( $properties );
 }
 
 
