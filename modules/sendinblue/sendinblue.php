@@ -124,3 +124,29 @@ function wpcf7_mask_password_improved( $text, $right = 0, $left = 0 ) {
 
 	return $text;
 }
+
+
+add_filter( 'wpcf7_editor_panels', 'wpcf7_sendinblue_editor_panels', 10, 1 );
+
+function wpcf7_sendinblue_editor_panels( $panels ) {
+	$service = WPCF7_Sendinblue::get_instance();
+
+	if ( ! $service->is_active() ) {
+		return $panels;
+	}
+
+	$editor_panel = function() {
+?>
+<h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
+<?php
+	};
+
+	$panels += array(
+		'sendinblue-panel' => array(
+			'title' => __( 'Sendinblue', 'contact-form-7' ),
+			'callback' => $editor_panel,
+		),
+	);
+
+	return $panels;
+}
