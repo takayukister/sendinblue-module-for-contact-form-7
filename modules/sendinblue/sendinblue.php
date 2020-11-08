@@ -135,9 +135,36 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		return $panels;
 	}
 
-	$editor_panel = function() {
+	// Todo: Correct desctiption and link
+	$description = sprintf(
+		esc_html(
+			__( "You can edit the form template here. For details, see %s.", 'contact-form-7' )
+		),
+		wpcf7_link(
+			__( 'https://contactform7.com/editing-form-template/', 'contact-form-7' ),
+			__( 'Editing form template', 'contact-form-7' )
+		)
+	);
+
+	$templates = $service->get_templates();
+
+	$editor_panel = function () use ( $description, $templates ) {
 ?>
 <h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
+
+<fieldset>
+	<legend><?php echo $description; ?></legend>
+
+	<label for="wpcf7-sendinblue-active">
+		<input type="checkbox" name="wpcf7-sendinblue[active]" id="wpcf7-sendinblue-active" value="1" />
+		<?php
+		echo esc_html(
+			__( "Send a transactional email", 'contact-form-7' )
+		);
+		?>
+	</label>
+
+</fieldset>
 <?php
 	};
 
