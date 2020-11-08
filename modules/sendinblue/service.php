@@ -247,6 +247,44 @@ trait WPCF7_Sendinblue_API {
 	}
 
 
+	public function get_templates() {
+		$endpoint = add_query_arg(
+			array(
+				'templateStatus' => 'true',
+				'limit' => 100,
+				'offset' => 0,
+			),
+			'https://api.sendinblue.com/v3/smtp/templates'
+		);
+
+		$request = array(
+			'headers' => array(
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json; charset=utf-8',
+				'API-Key' => $this->get_api_key(),
+			),
+		);
+
+		$response = wp_remote_get( $endpoint, $request );
+		$response_code = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( 200 === $response_code ) { // 200 OK
+			$response_body = wp_remote_retrieve_body( $response );
+			$response_body = json_decode( $response_body, true );
+
+			if ( empty( $response_body['templates'] ) ) {
+				return array();
+			} else {
+				return (array) $response_body['templates'];
+			}
+		} elseif ( 400 <= $response_code ) {
+			if ( WP_DEBUG ) {
+				$this->log( $endpoint, $request, $response );
+			}
+		}
+	}
+
+
 	public function create_contact( $properties ) {
 		$endpoint = 'https://api.sendinblue.com/v3/contacts';
 
