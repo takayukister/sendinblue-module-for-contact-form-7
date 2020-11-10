@@ -155,15 +155,40 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 <fieldset>
 	<legend><?php echo $description; ?></legend>
 
-	<label for="wpcf7-sendinblue-active">
-		<input type="checkbox" name="wpcf7-sendinblue[active]" id="wpcf7-sendinblue-active" value="1" />
+	<table class="form-table" role="presentation">
+		<tbody>
+			<tr>
+				<th scope="row">
 		<?php
-		echo esc_html(
-			__( "Send a transactional email", 'contact-form-7' )
-		);
-		?>
-	</label>
 
+		echo esc_html( __( 'Transactional email', 'contact-form-7' ) );
+
+		?>
+				</th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text">
+		<?php
+
+		echo esc_html( __( 'Transactional email', 'contact-form-7' ) );
+
+		?>
+						</legend>
+						<label for="wpcf7-sendinblue-active">
+							<input type="checkbox" name="wpcf7-sendinblue[active]" id="wpcf7-sendinblue-active" value="1" />
+		<?php
+
+		echo esc_html(
+			__( "Send a transactional email after submitting this form", 'contact-form-7' )
+		);
+
+		?>
+						</label>
+					</fieldset>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </fieldset>
 <?php
 	};
