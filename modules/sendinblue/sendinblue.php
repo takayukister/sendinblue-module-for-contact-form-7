@@ -187,6 +187,32 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 					</fieldset>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row">
+					<label for="wpcf7-sendinblue-active-template">
+		<?php
+
+		echo esc_html( __( 'Email template', 'contact-form-7' ) );
+
+		?>
+					</label>
+				</th>
+				<td>
+					<select name="wpcf7-sendinblue[template]" id="wpcf7-sendinblue-active-template">
+		<?php
+
+		foreach ( $templates as $template ) {
+			echo sprintf(
+				'<option value="%1$s">%2$s</option>',
+				esc_attr( $template['id'] ),
+				esc_html( $template['name'] )
+			);
+		}
+
+		?>
+					</select>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </fieldset>
