@@ -140,24 +140,43 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 					</label>
 				</th>
 				<td>
-					<select name="wpcf7-sendinblue[template]" id="wpcf7-sendinblue-active-template">
 		<?php
 
-		foreach ( $templates as $template ) {
-			$atts = wpcf7_format_atts( array(
-				'value' => $template['id'],
-				'selected' => $prop['template'] === $template['id'] ? 'selected' : '',
-			) );
+		if ( $templates ) {
+			echo '<select name="wpcf7-sendinblue[template]" id="wpcf7-sendinblue-active-template">';
 
+			foreach ( $templates as $template ) {
+				$atts = wpcf7_format_atts( array(
+					'value' => $template['id'],
+					'selected' => $prop['template'] === $template['id'] ? 'selected' : '',
+				) );
+
+				echo sprintf(
+					'<option %1$s>%2$s</option>',
+					$atts,
+					esc_html( $template['name'] )
+				);
+			}
+
+			echo '</select>';
+		} else {
 			echo sprintf(
-				'<option %1$s>%2$s</option>',
-				$atts,
-				esc_html( $template['name'] )
+				/* translators: %s: link labeled 'Sendinblue dashboard' */
+				esc_html( __( 'You have no active email template yet. Go to the %s and create your first template.', 'contact-form-7' ) ),
+				sprintf(
+					'<a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external" style="text-decoration: none"></span></a>',
+					wpcf7_format_atts( array(
+						'href' => 'https://app-smtp.sendinblue.com/templates',
+						'target' => '_blank',
+						'rel' => 'external noreferrer noopener',
+					) ),
+					esc_html( __( 'Sendinblue dashboard', 'contact-form-7' ) ),
+					esc_html( __( '(opens in a new tab)', 'contact-form-7' ) )
+				)
 			);
 		}
 
 		?>
-					</select>
 				</td>
 			</tr>
 		</tbody>
