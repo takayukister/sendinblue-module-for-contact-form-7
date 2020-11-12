@@ -77,20 +77,22 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		)
 	);
 
-	// Todo: Correct desctiption and link
-	$description = sprintf(
-		esc_html(
-			__( "You can edit the form template here. For details, see %s.", 'contact-form-7' )
-		),
-		wpcf7_link(
-			__( 'https://contactform7.com/editing-form-template/', 'contact-form-7' ),
-			__( 'Editing form template', 'contact-form-7' )
-		)
-	);
+	$editor_panel = function () use ( $prop, $service ) {
 
-	$templates = $service->get_templates();
+		// Todo: Correct desctiption and link
+		$description = sprintf(
+			esc_html(
+				__( "You can edit the form template here. For details, see %s.", 'contact-form-7' )
+			),
+			wpcf7_link(
+				__( 'https://contactform7.com/editing-form-template/', 'contact-form-7' ),
+				__( 'Editing form template', 'contact-form-7' )
+			)
+		);
 
-	$editor_panel = function () use ( $prop, $description, $templates ) {
+		$attributes = $service->get_contact_attributes();
+		$templates = $service->get_templates();
+
 ?>
 <h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
 
