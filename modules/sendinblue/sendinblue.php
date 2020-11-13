@@ -11,7 +11,7 @@ include_once path_join(
 );
 
 
-add_action( 'wpcf7_init', 'wpcf7_sendinblue_register_service', 10, 0 );
+add_action( 'wpcf7_init', 'wpcf7_sendinblue_register_service', 1, 0 );
 
 function wpcf7_sendinblue_register_service() {
 	$integration = WPCF7_Integration::get_instance();
