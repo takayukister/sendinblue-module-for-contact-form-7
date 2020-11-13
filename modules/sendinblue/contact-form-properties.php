@@ -41,6 +41,7 @@ function wpcf7_sendinblue_save_contact_form( $contact_form, $args, $context ) {
 	$prop = wp_parse_args(
 		$prop,
 		array(
+			'activate_contacts' => false,
 			'active' => false,
 			'template' => 0,
 		)
@@ -72,6 +73,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 	$prop = wp_parse_args(
 		$contact_form->prop( 'sendinblue' ),
 		array(
+			'activate_contacts' => false,
 			'active' => false,
 			'template' => 0,
 		)
@@ -101,6 +103,36 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 
 	<table class="form-table" role="presentation">
 		<tbody>
+			<tr>
+				<th scope="row">
+		<?php
+
+		echo esc_html( __( 'Contacts', 'contact-form-7' ) );
+
+		?>
+				</th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text">
+		<?php
+
+		echo esc_html( __( 'Contacts', 'contact-form-7' ) );
+
+		?>
+						</legend>
+						<label for="wpcf7-sendinblue-activate-contacts">
+							<input type="checkbox" name="wpcf7-sendinblue[activate_contacts]" id="wpcf7-sendinblue-activate-contacts" value="1" <?php checked( $prop['activate_contacts'] ); ?> />
+		<?php
+
+		echo esc_html(
+			__( "Create a contact for the submitter", 'contact-form-7' )
+		);
+
+		?>
+						</label>
+					</fieldset>
+				</td>
+			</tr>
 			<tr>
 				<th scope="row">
 		<?php
