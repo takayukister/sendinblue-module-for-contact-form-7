@@ -41,13 +41,13 @@ function wpcf7_sendinblue_save_contact_form( $contact_form, $args, $context ) {
 	$prop = wp_parse_args(
 		$prop,
 		array(
-			'activate_contacts' => false,
-			'active' => false,
-			'template' => 0,
+			'enable_contact_list' => true,
+			'enable_transactional_email' => false,
+			'email_template' => 0,
 		)
 	);
 
-	$prop['template'] = absint( $prop['template'] );
+	$prop['email_template'] = absint( $prop['email_template'] );
 
 	$contact_form->set_properties( array(
 		'sendinblue' => $prop,
@@ -73,9 +73,9 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 	$prop = wp_parse_args(
 		$contact_form->prop( 'sendinblue' ),
 		array(
-			'activate_contacts' => false,
-			'active' => false,
-			'template' => 0,
+			'enable_contact_list' => true,
+			'enable_transactional_email' => false,
+			'email_template' => 0,
 		)
 	);
 
@@ -107,7 +107,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				<th scope="row">
 		<?php
 
-		echo esc_html( __( 'Contacts', 'contact-form-7' ) );
+		echo esc_html( __( 'Contact list', 'contact-form-7' ) );
 
 		?>
 				</th>
@@ -116,16 +116,16 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 						<legend class="screen-reader-text">
 		<?php
 
-		echo esc_html( __( 'Contacts', 'contact-form-7' ) );
+		echo esc_html( __( 'Contact list', 'contact-form-7' ) );
 
 		?>
 						</legend>
-						<label for="wpcf7-sendinblue-activate-contacts">
-							<input type="checkbox" name="wpcf7-sendinblue[activate_contacts]" id="wpcf7-sendinblue-activate-contacts" value="1" <?php checked( $prop['activate_contacts'] ); ?> />
+						<label for="wpcf7-sendinblue-enable-contact-list">
+							<input type="checkbox" name="wpcf7-sendinblue[enable_contact_list]" id="wpcf7-sendinblue-enable-contact-list" value="1" <?php checked( $prop['enable_contact_list'] ); ?> />
 		<?php
 
 		echo esc_html(
-			__( "Create a contact for the submitter", 'contact-form-7' )
+			__( "Add form submitters to your contact list", 'contact-form-7' )
 		);
 
 		?>
@@ -150,12 +150,12 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 
 		?>
 						</legend>
-						<label for="wpcf7-sendinblue-active">
-							<input type="checkbox" name="wpcf7-sendinblue[active]" id="wpcf7-sendinblue-active" value="1" <?php checked( $prop['active'] ); ?> />
+						<label for="wpcf7-sendinblue-enable-transactional-email">
+							<input type="checkbox" name="wpcf7-sendinblue[enable_transactional_email]" id="wpcf7-sendinblue-enable-transactional-email" value="1" <?php checked( $prop['enable_transactional_email'] ); ?> />
 		<?php
 
 		echo esc_html(
-			__( "Send a transactional email after submitting this form", 'contact-form-7' )
+			__( "Send a transactional email to the contact", 'contact-form-7' )
 		);
 
 		?>
@@ -165,7 +165,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="wpcf7-sendinblue-active-template">
+					<label for="wpcf7-sendinblue-email-template">
 		<?php
 
 		echo esc_html( __( 'Email template', 'contact-form-7' ) );
@@ -177,12 +177,13 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		<?php
 
 		if ( $templates ) {
-			echo '<select name="wpcf7-sendinblue[template]" id="wpcf7-sendinblue-active-template">';
+			echo '<select name="wpcf7-sendinblue[email_template]" id="wpcf7-sendinblue-email-template">';
 
 			foreach ( $templates as $template ) {
 				$atts = wpcf7_format_atts( array(
 					'value' => $template['id'],
-					'selected' => $prop['template'] === $template['id'] ? 'selected' : '',
+					'selected' => $prop['email_template'] === $template['id']
+						? 'selected' : '',
 				) );
 
 				echo sprintf(
