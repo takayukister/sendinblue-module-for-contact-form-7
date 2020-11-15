@@ -35,14 +35,20 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
-	$do_submit = true;
-
-	if ( empty( $result['status'] )
-	or ! in_array( $result['status'], array( 'mail_sent' ) ) ) {
-		$do_submit = false;
+	if ( empty( $result['posted_data_hash'] ) ) {
+		return;
 	}
 
-	if ( ! $do_submit ) {
+	$prop = wp_parse_args(
+		$contact_form->prop( 'sendinblue' ),
+		array(
+			'enable_contact_list' => true,
+			'enable_transactional_email' => false,
+			'email_template' => 0,
+		)
+	);
+
+	if ( ! $prop['enable_contact_list'] ) {
 		return;
 	}
 
@@ -53,24 +59,11 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		'attributes' => $submission->get_posted_data(),
 	);
 
-	$service->create_contact( $properties );
-}
-
-
-add_action( 'wpcf7_submit', 'wpcf7_sendinblue_send_email', 10, 2 );
-
-function wpcf7_sendinblue_send_email( $contact_form, $result ) {
-	if ( $contact_form->in_demo_mode() ) {
+	if ( ! $service->create_contact( $properties ) ) {
 		return;
 	}
 
-	if ( empty( $result['posted_data_hash'] ) ) {
-		return;
-	}
-
-	$service = WPCF7_Sendinblue::get_instance();
-
-	if ( ! $service->is_active() ) {
+	if ( ! $prop['enable_transactional_email'] or ! $prop['email_template'] ) {
 		return;
 	}
 
