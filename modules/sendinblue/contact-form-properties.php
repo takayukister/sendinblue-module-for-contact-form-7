@@ -95,7 +95,26 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		$attributes = $service->get_contact_attributes();
 		$templates = $service->get_templates();
 
+		// Todo: Move the following script and style to Contact Form 7 core.
 ?>
+<script>
+( function( $ ) {
+	$( function() {
+		$( '#wpcf7-sendinblue-enable-contact-list, #wpcf7-sendinblue-enable-transactional-email' ).on( 'change', function() {
+			if ( $( this ).is( ':checked' ) ) {
+				$( this ).closest( 'tr' ).removeClass( 'inactive' );
+			} else {
+				$( this ).closest( 'tr' ).addClass( 'inactive' );
+			}
+		} );
+	} );
+} )( jQuery );
+</script>
+<style>
+#sendinblue-panel table tr.inactive ~ tr {
+	display: none;
+}
+</style>
 <h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
 
 <fieldset>
@@ -103,7 +122,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 
 	<table class="form-table" role="presentation">
 		<tbody>
-			<tr>
+			<tr class="<?php echo $prop['enable_contact_list'] ? '' : 'inactive'; ?>">
 				<th scope="row">
 		<?php
 
@@ -133,7 +152,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 					</fieldset>
 				</td>
 			</tr>
-			<tr>
+			<tr class="<?php echo $prop['enable_transactional_email'] ? '' : 'inactive'; ?>">
 				<th scope="row">
 		<?php
 
