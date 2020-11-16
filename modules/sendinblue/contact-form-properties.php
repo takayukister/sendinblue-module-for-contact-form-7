@@ -92,7 +92,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 			)
 		);
 
-		$attributes = $service->get_contact_attributes();
+		$lists = $service->get_lists();
 		$templates = $service->get_templates();
 
 		// Todo: Move the following script and style to Contact Form 7 core.
@@ -150,6 +150,22 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		?>
 						</label>
 					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"></th>
+				<td>
+		<?php
+
+		foreach ( $lists as $list ) {
+			echo sprintf(
+				'<label><input type="checkbox" value="%1$s" /> %2$s</label>',
+				absint( $list['id'] ),
+				esc_html( $list['name'] )
+			);
+		}
+
+		?>
 				</td>
 			</tr>
 			<tr class="<?php echo $prop['enable_transactional_email'] ? '' : 'inactive'; ?>">
