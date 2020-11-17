@@ -120,6 +120,10 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 #sendinblue-panel .dashicons {
 	text-decoration: none;
 }
+
+#sendinblue-panel td p {
+	margin-top: 12px;
+}
 </style>
 <h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
 
@@ -237,31 +241,28 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">
-					<label for="wpcf7-sendinblue-email-template">
-		<?php
-
-		echo esc_html( __( 'Email template', 'contact-form-7' ) );
-
-		?>
-					</label>
-				</th>
+				<th scope="row"></th>
 				<td>
+					<fieldset>
 		<?php
 
 		if ( $templates ) {
+			echo sprintf(
+				'<legend>%1$s</legend>',
+				esc_html( __( 'Select an email template:', 'contact-form-7' ) )
+			);
+
 			echo '<select name="wpcf7-sendinblue[email_template]" id="wpcf7-sendinblue-email-template">';
 
 			foreach ( $templates as $template ) {
-				$atts = wpcf7_format_atts( array(
-					'value' => $template['id'],
-					'selected' => $prop['email_template'] === $template['id']
-						? 'selected' : '',
-				) );
-
 				echo sprintf(
 					'<option %1$s>%2$s</option>',
-					$atts,
+					wpcf7_format_atts( array(
+						'value' => $template['id'],
+						'selected' => $prop['email_template'] === $template['id']
+							? 'selected'
+							: '',
+					) ),
 					esc_html( $template['name'] )
 				);
 			}
@@ -269,20 +270,25 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 			echo '</select>';
 		} else {
 			echo sprintf(
-				/* translators: %s: link labeled 'Sendinblue dashboard' */
-				esc_html( __( 'You have no active email template yet. Go to the %s and create your first template.', 'contact-form-7' ) ),
-				sprintf(
-					'<a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a>',
-					wpcf7_format_atts( array(
-						'href' => 'https://app-smtp.sendinblue.com/templates',
-						'target' => '_blank',
-						'rel' => 'external noreferrer noopener',
-					) ),
-					esc_html( __( 'Sendinblue dashboard', 'contact-form-7' ) ),
-					esc_html( __( '(opens in a new tab)', 'contact-form-7' ) )
-				)
+				'<legend>%1$s</legend>',
+				esc_html( __( 'You have no active email template yet.', 'contact-form-7' ) )
 			);
 		}
+
+		?>
+					</fieldset>
+		<?php
+
+		echo sprintf(
+			'<p><a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+			wpcf7_format_atts( array(
+				'href' => 'https://my.sendinblue.com/camp/lists/template',
+				'target' => '_blank',
+				'rel' => 'external noreferrer noopener',
+			) ),
+			esc_html( __( 'Manage your email templates', 'contact-form-7' ) ),
+			esc_html( __( '(opens in a new tab)', 'contact-form-7' ) )
+		);
 
 		?>
 				</td>
