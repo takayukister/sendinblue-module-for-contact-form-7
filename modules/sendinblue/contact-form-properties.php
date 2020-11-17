@@ -166,33 +166,40 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				<th scope="row"></th>
 				<td>
 					<fieldset>
-						<legend>
 		<?php
 
-		echo esc_html( __( 'Select lists to which contacts are added:', 'contact-form-7' ) );
-
-		?>
-						</legend>
-						<ul>
-		<?php
-
-		foreach ( $lists as $list ) {
+		if ( $lists ) {
 			echo sprintf(
-				'<li><label><input %1$s /> %2$s</label></li>',
-				wpcf7_format_atts( array(
-					'type' => 'checkbox',
-					'name' => 'wpcf7-sendinblue[contact_lists][]',
-					'value' => $list['id'],
-					'checked' => in_array( $list['id'], $prop['contact_lists'] )
-						? 'checked'
-						: '',
-				) ),
-				esc_html( $list['name'] )
+				'<legend>%1$s</legend>',
+				esc_html( __( 'Select lists to which contacts are added:', 'contact-form-7' ) )
+			);
+
+			echo '<ul>';
+
+			foreach ( $lists as $list ) {
+				echo sprintf(
+					'<li><label><input %1$s /> %2$s</label></li>',
+					wpcf7_format_atts( array(
+						'type' => 'checkbox',
+						'name' => 'wpcf7-sendinblue[contact_lists][]',
+						'value' => $list['id'],
+						'checked' => in_array( $list['id'], $prop['contact_lists'] )
+							? 'checked'
+							: '',
+					) ),
+					esc_html( $list['name'] )
+				);
+			}
+
+			echo '</ul>';
+		} else {
+			echo sprintf(
+				'<legend>%1$s</legend>',
+				esc_html( __( 'You have no contact list yet.', 'contact-form-7' ) )
 			);
 		}
 
 		?>
-						</ul>
 					</fieldset>
 		<?php
 
