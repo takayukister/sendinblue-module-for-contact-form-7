@@ -114,6 +114,10 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 #sendinblue-panel table tr.inactive ~ tr {
 	display: none;
 }
+
+#sendinblue-panel .dashicons {
+	text-decoration: none;
+}
 </style>
 <h2><?php echo esc_html( __( 'Sendinblue', 'contact-form-7' ) ); ?></h2>
 
@@ -180,7 +184,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		<?php
 
 		echo sprintf(
-			'<p><a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external" style="text-decoration: none"></span></a></p>',
+			'<p><a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 			wpcf7_format_atts( array(
 				'href' => 'https://my.sendinblue.com/lists',
 				'target' => '_blank',
@@ -259,7 +263,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				/* translators: %s: link labeled 'Sendinblue dashboard' */
 				esc_html( __( 'You have no active email template yet. Go to the %s and create your first template.', 'contact-form-7' ) ),
 				sprintf(
-					'<a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external" style="text-decoration: none"></span></a>',
+					'<a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a>',
 					wpcf7_format_atts( array(
 						'href' => 'https://app-smtp.sendinblue.com/templates',
 						'target' => '_blank',
