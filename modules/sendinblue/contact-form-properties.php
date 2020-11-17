@@ -42,6 +42,7 @@ function wpcf7_sendinblue_save_contact_form( $contact_form, $args, $context ) {
 		$prop,
 		array(
 			'enable_contact_list' => true,
+			'contact_lists' => array(),
 			'enable_transactional_email' => false,
 			'email_template' => 0,
 		)
@@ -74,6 +75,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		$contact_form->prop( 'sendinblue' ),
 		array(
 			'enable_contact_list' => true,
+			'contact_lists' => array(),
 			'enable_transactional_email' => false,
 			'email_template' => 0,
 		)
@@ -172,8 +174,15 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 
 		foreach ( $lists as $list ) {
 			echo sprintf(
-				'<li><label><input type="checkbox" value="%1$s" /> %2$s</label></li>',
-				absint( $list['id'] ),
+				'<li><label><input %1$s /> %2$s</label></li>',
+				wpcf7_format_atts( array(
+					'type' => 'checkbox',
+					'name' => 'wpcf7-sendinblue[contact_lists][]',
+					'value' => $list['id'],
+					'checked' => in_array( $list['id'], $prop['contact_lists'] )
+						? 'checked'
+						: '',
+				) ),
 				esc_html( $list['name'] )
 			);
 		}
