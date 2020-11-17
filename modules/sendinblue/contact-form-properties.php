@@ -155,15 +155,40 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 			<tr>
 				<th scope="row"></th>
 				<td>
+					<fieldset>
+						<legend>
+		<?php
+
+		echo esc_html( __( 'Select lists to add the contact to:', 'contact-form-7' ) );
+
+		?>
+						</legend>
+						<ul>
 		<?php
 
 		foreach ( $lists as $list ) {
 			echo sprintf(
-				'<label><input type="checkbox" value="%1$s" /> %2$s</label>',
+				'<li><label><input type="checkbox" value="%1$s" /> %2$s</label></li>',
 				absint( $list['id'] ),
 				esc_html( $list['name'] )
 			);
 		}
+
+		?>
+						</ul>
+					</fieldset>
+		<?php
+
+		echo sprintf(
+			'<p><a %1$s>%2$s <span class="screen-reader-text">%3$s</span><span aria-hidden="true" class="dashicons dashicons-external" style="text-decoration: none"></span></a></p>',
+			wpcf7_format_atts( array(
+				'href' => 'https://my.sendinblue.com/lists',
+				'target' => '_blank',
+				'rel' => 'external noreferrer noopener',
+			) ),
+			esc_html( __( 'Manage your contact lists', 'contact-form-7' ) ),
+			esc_html( __( '(opens in a new tab)', 'contact-form-7' ) )
+		);
 
 		?>
 				</td>
