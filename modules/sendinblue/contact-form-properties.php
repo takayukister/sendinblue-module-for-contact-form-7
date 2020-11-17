@@ -130,7 +130,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				<th scope="row">
 		<?php
 
-		echo esc_html( __( 'Contact list', 'contact-form-7' ) );
+		echo esc_html( __( 'Contact lists', 'contact-form-7' ) );
 
 		?>
 				</th>
@@ -139,7 +139,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 						<legend class="screen-reader-text">
 		<?php
 
-		echo esc_html( __( 'Contact list', 'contact-form-7' ) );
+		echo esc_html( __( 'Contact lists', 'contact-form-7' ) );
 
 		?>
 						</legend>
@@ -148,7 +148,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		<?php
 
 		echo esc_html(
-			__( "Add form submitters to your contact list", 'contact-form-7' )
+			__( "Add form submitters to your contact lists", 'contact-form-7' )
 		);
 
 		?>
@@ -163,7 +163,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 						<legend>
 		<?php
 
-		echo esc_html( __( 'Select lists to add the contact to:', 'contact-form-7' ) );
+		echo esc_html( __( 'Select lists to which contacts are added:', 'contact-form-7' ) );
 
 		?>
 						</legend>
