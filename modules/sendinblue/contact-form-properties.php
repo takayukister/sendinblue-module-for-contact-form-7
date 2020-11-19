@@ -41,7 +41,7 @@ function wpcf7_sendinblue_save_contact_form( $contact_form, $args, $context ) {
 	$prop = wp_parse_args(
 		$prop,
 		array(
-			'enable_contact_list' => true,
+			'enable_contact_list' => false,
 			'contact_lists' => array(),
 			'enable_transactional_email' => false,
 			'email_template' => 0,
