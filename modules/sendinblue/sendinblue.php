@@ -55,7 +55,7 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 	$submission = WPCF7_Submission::get_instance();
 
 	$properties = array(
-		'email' => $submission->get_posted_data( 'your-email' ),
+		'email' => wpcf7_sendinblue_retrieve_attribute( 'EMAIL' ),
 		'attributes' => $submission->get_posted_data(),
 	);
 
@@ -84,6 +84,49 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 	);
 
 	$service->send_email( $properties );
+}
+
+
+function wpcf7_sendinblue_retrieve_attribute( $name, $context = 'contact' ) {
+	$name = strtoupper( trim( $name ) );
+
+	if ( empty( $name ) ) {
+		return false;
+	}
+
+	$submission = WPCF7_Submission::get_instance();
+
+	$field_name = sprintf(
+		'your-%s',
+		preg_replace( '/[^0-9a-z]+/', '-', strtolower( $name ) )
+	);
+
+	$attribute = $submission->get_posted_data( $field_name );
+
+	if ( null === $attribute and 'contact' == $context ) {
+		$your_name = $submission->get_posted_data( 'your-name' );
+		$your_name = implode( ' ', (array) $your_name );
+		$your_name = explode( ' ', $your_name );
+
+		if ( 'LASTNAME' == $name ) {
+			$attribute = implode(
+				' ',
+				array_slice( $your_name, 1 )
+			);
+		} elseif ( 'FIRSTNAME' == $name ) {
+			$attribute = implode(
+				' ',
+				array_slice( $your_name, 0, 1 )
+			);
+		}
+	}
+
+	$attribute = apply_filters(
+		'wpcf7_sendinblue_retrieve_attribute',
+		$attribute, $name, $context
+	);
+
+	return (string) $attribute;
 }
 
 
