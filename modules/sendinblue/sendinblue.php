@@ -43,6 +43,7 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		$contact_form->prop( 'sendinblue' ),
 		array(
 			'enable_contact_list' => true,
+			'contact_lists' => array(),
 			'enable_transactional_email' => false,
 			'email_template' => 0,
 		)
@@ -75,6 +76,7 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 	$result = $service->create_contact( array(
 		'email' => $email,
 		'attributes' => array_filter( $attributes ),
+		'listIds' => (array) $prop['contact_lists'],
 	) );
 
 	if ( ! $result ) {
