@@ -114,8 +114,10 @@ function wpcf7_sendinblue_retrieve_attribute( $name, $context = 'contact' ) {
 	);
 
 	$attribute = $submission->get_posted_data( $field_name );
+	$attribute = implode( ' ', (array) $attribute );
+	$attribute = trim( $attribute );
 
-	if ( null === $attribute and 'contact' == $context ) {
+	if ( '' === $attribute and 'contact' == $context ) {
 		$your_name = $submission->get_posted_data( 'your-name' );
 		$your_name = implode( ' ', (array) $your_name );
 		$your_name = explode( ' ', $your_name );
@@ -130,6 +132,17 @@ function wpcf7_sendinblue_retrieve_attribute( $name, $context = 'contact' ) {
 				' ',
 				array_slice( $your_name, 0, 1 )
 			);
+		}
+	}
+
+	if ( 'contact' == $context and 'SMS' == $name ) {
+		$plus = '+' == substr( $attribute, 0, 1 ) ? '+' : '';
+		$attribute = preg_replace( '/[^0-9]/', '', $attribute );
+
+		if ( 6 < strlen( $attribute ) and strlen( $attribute ) < 18 ) {
+			$attribute = $plus . $attribute;
+		} else { // Invalid phone number
+			$attribute = '';
 		}
 	}
 
