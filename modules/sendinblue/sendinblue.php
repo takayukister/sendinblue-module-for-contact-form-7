@@ -52,6 +52,8 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
+	$email = wpcf7_sendinblue_retrieve_attribute( 'EMAIL' );
+
 	$attributes = array();
 
 	foreach ( (array) $service->get_contact_attributes() as $attr ) {
@@ -66,12 +68,16 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		}
 	}
 
-	$properties = array(
-		'email' => wpcf7_sendinblue_retrieve_attribute( 'EMAIL' ),
-		'attributes' => array_filter( $attributes ),
-	);
+	if ( empty( $email ) and empty( $attributes['SMS'] ) ) {
+		return;
+	}
 
-	if ( ! $service->create_contact( $properties ) ) {
+	$result = $service->create_contact( array(
+		'email' => $email,
+		'attributes' => array_filter( $attributes ),
+	) );
+
+	if ( ! $result ) {
 		return;
 	}
 
