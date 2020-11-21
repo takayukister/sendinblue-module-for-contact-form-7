@@ -48,6 +48,8 @@ function wpcf7_sendinblue_save_contact_form( $contact_form, $args, $context ) {
 		)
 	);
 
+	$prop['contact_lists'] = array_map( 'absint', $prop['contact_lists'] );
+
 	$prop['email_template'] = absint( $prop['email_template'] );
 
 	$contact_form->set_properties( array(
