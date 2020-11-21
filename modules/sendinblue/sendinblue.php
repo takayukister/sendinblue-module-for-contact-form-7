@@ -52,11 +52,23 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
-	$submission = WPCF7_Submission::get_instance();
+	$attributes = array();
+
+	foreach ( (array) $service->get_contact_attributes() as $attr ) {
+		if ( empty( $attr['category'] ) or 'normal' != $attr['category'] ) {
+			continue;
+		}
+
+		if ( ! empty( $attr['name'] ) ) {
+			$attributes += array(
+				$attr['name'] => wpcf7_sendinblue_retrieve_attribute( $attr['name'] ),
+			);
+		}
+	}
 
 	$properties = array(
 		'email' => wpcf7_sendinblue_retrieve_attribute( 'EMAIL' ),
-		'attributes' => $submission->get_posted_data(),
+		'attributes' => array_filter( $attributes ),
 	);
 
 	if ( ! $service->create_contact( $properties ) ) {
