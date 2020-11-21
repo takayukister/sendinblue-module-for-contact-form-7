@@ -73,13 +73,13 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
-	$result = $service->create_contact( array(
+	$contact_id = $service->create_contact( array(
 		'email' => $email,
 		'attributes' => array_filter( $attributes ),
 		'listIds' => (array) $prop['contact_lists'],
 	) );
 
-	if ( ! $result ) {
+	if ( ! $contact_id ) {
 		return;
 	}
 
@@ -87,23 +87,19 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
-	$properties = array(
-		'sender' => array(
-			'name' => 'Tester Testerson',
-			'email' => 'testerson@example.com',
-		),
+	$service->send_email( array(
+		'templateId' => absint( $prop['email_template'] ),
 		'to' => array(
 			array(
-				'name' => 'Tester Testerson Jr.',
-				'email' => 'testersonjr@example.com',
+				'name' => sprintf(
+					'%1$s %2$s',
+					$attributes['FIRSTNAME'],
+					$attributes['LASTNAME']
+				),
+				'email' => $email,
 			),
 		),
-		'subject' => 'Test',
-		'htmlContent' => "<strong>Hello!</strong> This is a test message.",
-		'textContent' => "Hello! This is a test message.",
-	);
-
-	$service->send_email( $properties );
+	) );
 }
 
 

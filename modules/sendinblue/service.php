@@ -368,10 +368,9 @@ trait WPCF7_Sendinblue_API {
 		$response = wp_remote_post( $endpoint, $request );
 		$response_code = (int) wp_remote_retrieve_response_code( $response );
 
-		if ( 201 === $response_code ) { // 201 Contact created
-			return true;
-		} elseif ( 204 === $response_code ) { // 204 Contact updated
-			return true;
+		if ( in_array( $response_code, array( 201, 204 ), true ) ) {
+			$contact_id = wp_remote_retrieve_body( $response );
+			return $contact_id;
 		} elseif ( 400 <= $response_code ) {
 			if ( WP_DEBUG ) {
 				$this->log( $endpoint, $request, $response );
