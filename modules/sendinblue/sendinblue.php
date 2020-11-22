@@ -53,29 +53,15 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
-	$email = wpcf7_sendinblue_retrieve_attribute( 'EMAIL' );
+	$attributes = wpcf7_sendinblue_collect_parameters();
 
-	$attributes = array();
-
-	foreach ( (array) $service->get_contact_attributes() as $attr ) {
-		if ( empty( $attr['category'] ) or 'normal' != $attr['category'] ) {
-			continue;
-		}
-
-		if ( ! empty( $attr['name'] ) ) {
-			$attributes += array(
-				$attr['name'] => wpcf7_sendinblue_retrieve_attribute( $attr['name'] ),
-			);
-		}
-	}
-
-	if ( empty( $email ) and empty( $attributes['SMS'] ) ) {
+	if ( empty( $attributes['EMAIL'] ) and empty( $attributes['SMS'] ) ) {
 		return;
 	}
 
 	$contact_id = $service->create_contact( array(
-		'email' => $email,
-		'attributes' => array_filter( $attributes ),
+		'email' => $attributes['EMAIL'],
+		'attributes' => (object) $attributes,
 		'listIds' => (array) $prop['contact_lists'],
 	) );
 
@@ -96,66 +82,72 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 					$attributes['FIRSTNAME'],
 					$attributes['LASTNAME']
 				),
-				'email' => $email,
+				'email' => $attributes['EMAIL'],
 			),
 		),
+		'params' => (object) $attributes,
 	) );
 }
 
 
-function wpcf7_sendinblue_retrieve_attribute( $name, $context = 'contact' ) {
-	$name = strtoupper( trim( $name ) );
-
-	if ( empty( $name ) ) {
-		return false;
-	}
+function wpcf7_sendinblue_collect_parameters() {
+	$params = array();
 
 	$submission = WPCF7_Submission::get_instance();
 
-	$field_name = sprintf(
-		'your-%s',
-		preg_replace( '/[^0-9a-z]+/', '-', strtolower( $name ) )
-	);
+	foreach ( (array) $submission->get_posted_data() as $name => $val ) {
+		$name = strtoupper( $name );
 
-	$attribute = $submission->get_posted_data( $field_name );
-	$attribute = implode( ' ', (array) $attribute );
-	$attribute = trim( $attribute );
+		if ( 'YOUR-' == substr( $name, 0, 5 ) ) {
+			$name = substr( $name, 5 );
+		}
 
-	if ( '' === $attribute and 'contact' == $context ) {
-		$your_name = $submission->get_posted_data( 'your-name' );
-		$your_name = implode( ' ', (array) $your_name );
+		if ( 'SMS' == $name ) {
+			$val = implode( ' ', (array) $val );
+			$val = trim( $val );
+
+			$plus = '+' == substr( $val, 0, 1 ) ? '+' : '';
+			$val = preg_replace( '/[^0-9]/', '', $val );
+
+			if ( 6 < strlen( $val ) and strlen( $val ) < 18 ) {
+				$val = $plus . $val;
+			} else { // Invalid phone number
+				$val = '';
+			}
+		}
+
+		if ( $val ) {
+			$params += array(
+				$name => $val,
+			);
+		}
+	}
+
+	if ( isset( $params['NAME'] ) ) {
+		$your_name = implode( ' ', (array) $params['NAME'] );
 		$your_name = explode( ' ', $your_name );
 
-		if ( 'LASTNAME' == $name ) {
-			$attribute = implode(
+		if ( ! isset( $params['LASTNAME'] ) ) {
+			$params['LASTNAME'] = implode(
 				' ',
 				array_slice( $your_name, 1 )
 			);
-		} elseif ( 'FIRSTNAME' == $name ) {
-			$attribute = implode(
+		}
+
+		if ( ! isset( $params['FIRSTNAME'] ) ) {
+			$params['FIRSTNAME'] = implode(
 				' ',
 				array_slice( $your_name, 0, 1 )
 			);
 		}
 	}
 
-	if ( 'contact' == $context and 'SMS' == $name ) {
-		$plus = '+' == substr( $attribute, 0, 1 ) ? '+' : '';
-		$attribute = preg_replace( '/[^0-9]/', '', $attribute );
-
-		if ( 6 < strlen( $attribute ) and strlen( $attribute ) < 18 ) {
-			$attribute = $plus . $attribute;
-		} else { // Invalid phone number
-			$attribute = '';
-		}
-	}
-
-	$attribute = apply_filters(
-		'wpcf7_sendinblue_retrieve_attribute',
-		$attribute, $name, $context
+	$params = apply_filters(
+		'wpcf7_sendinblue_collect_parameters',
+		$params
 	);
 
-	return (string) $attribute;
+	return $params;
 }
 
 
