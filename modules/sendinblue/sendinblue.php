@@ -39,6 +39,22 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
+	$submission = WPCF7_Submission::get_instance();
+
+	$consented = true;
+
+	foreach ( $contact_form->scan_form_tags( 'feature=name-attr' ) as $tag ) {
+		if ( $tag->has_option( 'consent_for:sendinblue' )
+		and null == $submission->get_posted_data( $tag->name ) ) {
+			$consented = false;
+			break;
+		}
+	}
+
+	if ( ! $consented ) {
+		return;
+	}
+
 	$prop = wp_parse_args(
 		$contact_form->prop( 'sendinblue' ),
 		array(
@@ -102,24 +118,24 @@ function wpcf7_sendinblue_collect_parameters() {
 			$name = substr( $name, 5 );
 		}
 
-		if ( 'SMS' == $name ) {
-			$val = implode( ' ', (array) $val );
-			$val = trim( $val );
-
-			$plus = '+' == substr( $val, 0, 1 ) ? '+' : '';
-			$val = preg_replace( '/[^0-9]/', '', $val );
-
-			if ( 6 < strlen( $val ) and strlen( $val ) < 18 ) {
-				$val = $plus . $val;
-			} else { // Invalid phone number
-				$val = '';
-			}
-		}
-
 		if ( $val ) {
 			$params += array(
 				$name => $val,
 			);
+		}
+	}
+
+	if ( isset( $params['SMS'] ) ) {
+		$sms = implode( ' ', (array) $params['SMS'] );
+		$sms = trim( $sms );
+
+		$plus = '+' == substr( $sms, 0, 1 ) ? '+' : '';
+		$sms = preg_replace( '/[^0-9]/', '', $sms );
+
+		if ( 6 < strlen( $sms ) and strlen( $sms ) < 18 ) {
+			$params['SMS'] = $plus . $sms;
+		} else { // Invalid phone number
+			unset( $params['SMS'] );
 		}
 	}
 
