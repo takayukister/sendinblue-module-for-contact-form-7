@@ -39,6 +39,22 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
+	$submission = WPCF7_Submission::get_instance();
+
+	$consented = true;
+
+	foreach ( $contact_form->scan_form_tags( 'feature=name-attr' ) as $tag ) {
+		if ( $tag->has_option( 'consent_for:sendinblue' )
+		and null == $submission->get_posted_data( $tag->name ) ) {
+			$consented = false;
+			break;
+		}
+	}
+
+	if ( ! $consented ) {
+		return;
+	}
+
 	$prop = wp_parse_args(
 		$contact_form->prop( 'sendinblue' ),
 		array(
