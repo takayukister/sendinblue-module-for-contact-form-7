@@ -222,7 +222,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 				<th scope="row">
 		<?php
 
-		echo esc_html( __( 'Transactional email', 'contact-form-7' ) );
+		echo esc_html( __( 'Welcome email', 'contact-form-7' ) );
 
 		?>
 				</th>
@@ -231,7 +231,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 						<legend class="screen-reader-text">
 		<?php
 
-		echo esc_html( __( 'Transactional email', 'contact-form-7' ) );
+		echo esc_html( __( 'Welcome email', 'contact-form-7' ) );
 
 		?>
 						</legend>
@@ -240,7 +240,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 		<?php
 
 		echo esc_html(
-			__( "Send a transactional email to the contact", 'contact-form-7' )
+			__( "Send a welcome email to new contacts", 'contact-form-7' )
 		);
 
 		?>
