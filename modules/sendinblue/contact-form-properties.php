@@ -85,14 +85,13 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 
 	$editor_panel = function () use ( $prop, $service ) {
 
-		// Todo: Correct desctiption and link
 		$description = sprintf(
 			esc_html(
-				__( "You can edit the form template here. For details, see %s.", 'contact-form-7' )
+				__( "You can set up the Sendinblue integration here. For details, see %s.", 'contact-form-7' )
 			),
 			wpcf7_link(
-				__( 'https://contactform7.com/editing-form-template/', 'contact-form-7' ),
-				__( 'Editing form template', 'contact-form-7' )
+				__( 'https://contactform7.com/sendinblue-integration/', 'contact-form-7' ),
+				__( 'Sendinblue integration', 'contact-form-7' )
 			)
 		);
 
