@@ -145,10 +145,10 @@ class WPCF7_Sendinblue extends WPCF7_Service {
 
 	public function display( $action = '' ) {
 		echo '<p>' . sprintf(
-			esc_html( __( 'Email, SMS, Facebook, Chat, CRM, and more, all-in-one platform to help you grow your business through building stronger customer relationships. For details, see %s.', 'contact-form-7' ) ),
+			esc_html( __( "With this integration module, you can turn your contact forms into subscriber signup forms, which will help you grow your contact list. You can also send an email to the subscriber leveraging well-designed templates and Sendinblue's reliable SMTP. For details, see %s.", 'contact-form-7' ) ),
 			wpcf7_link(
-				__( 'https://contactform7.com/recaptcha/', 'contact-form-7' ),
-				__( 'reCAPTCHA (v3)', 'contact-form-7' )
+				__( 'https://contactform7.com/sendinblue-integration/', 'contact-form-7' ),
+				__( 'Sendinblue integration', 'contact-form-7' )
 			)
 		) . '</p>';
 
