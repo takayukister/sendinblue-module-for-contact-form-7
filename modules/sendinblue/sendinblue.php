@@ -102,6 +102,7 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 			),
 		),
 		'params' => (object) $attributes,
+		'tags' => array( 'Contact Form 7' ),
 	) );
 }
 
