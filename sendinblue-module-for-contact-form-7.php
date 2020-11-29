@@ -27,6 +27,14 @@ define( 'CF7SENDINBLUE_PLUGIN_MODULES_DIR',
 );
 
 add_action( 'plugins_loaded', function() {
+
+	// If you use a Contact Form 7 version that already
+	// includes the Sendinblue module
+	if ( defined( 'WPCF7_PLUGIN_MODULES_DIR' )
+	and file_exists( path_join( WPCF7_PLUGIN_MODULES_DIR, 'sendinblue' ) ) ) {
+		return;
+	}
+
 	if ( ! class_exists( 'WPCF7_Service' ) ) {
 		return;
 	}
