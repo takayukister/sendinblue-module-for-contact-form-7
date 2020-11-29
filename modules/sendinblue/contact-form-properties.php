@@ -76,7 +76,7 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 	$prop = wp_parse_args(
 		$contact_form->prop( 'sendinblue' ),
 		array(
-			'enable_contact_list' => true,
+			'enable_contact_list' => false,
 			'contact_lists' => array(),
 			'enable_transactional_email' => false,
 			'email_template' => 0,
