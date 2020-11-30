@@ -10,7 +10,7 @@ This plugin works with WordPress 5.4+ and Contact Form 7 5.3.
 
 ## How to install
 
-[Download the zip file](https://github.com/takayukister/sendinblue-module-for-contact-form-7/releases/tag/v1.0-beta) from this repository and [upload it to your WordPress site](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin) through the **Plugins** admin screen.
+[Download the zip file](https://github.com/takayukister/sendinblue-module-for-contact-form-7/releases/latest) from this repository and [upload it to your WordPress site](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin) through the **Plugins** admin screen.
 
 
 ## How to use
