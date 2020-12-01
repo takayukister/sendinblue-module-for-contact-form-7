@@ -39,6 +39,11 @@ function wpcf7_sendinblue_submit( $contact_form, $result ) {
 		return;
 	}
 
+	if ( empty( $result['status'] )
+	or ! in_array( $result['status'], array( 'mail_sent', 'mail_failed' ) ) ) {
+		return;
+	}
+
 	$submission = WPCF7_Submission::get_instance();
 
 	$consented = true;
