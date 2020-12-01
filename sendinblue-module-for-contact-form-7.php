@@ -5,7 +5,7 @@ Description: Just another Sendinblue module for Contact Form 7.
 Author: Takayuki Miyoshi
 Text Domain: sendinblue-module-for-contact-form-7
 Domain Path: /languages/
-Version: 1.0-beta2
+Version: 1.0-beta3
 */
 
 define( 'CF7SENDINBLUE_PLUGIN', __FILE__ );
