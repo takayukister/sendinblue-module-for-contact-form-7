@@ -263,7 +263,13 @@ function wpcf7_sendinblue_editor_panels( $panels ) {
 			echo '<select name="wpcf7-sendinblue[email_template]">';
 
 			echo sprintf(
-				'<option value="">%1$s</option>',
+				'<option %1$s>%2$s</option>',
+				wpcf7_format_atts( array(
+					'value' => 0,
+					'selected' => 0 === $prop['email_template']
+						? 'selected'
+						: '',
+				) ),
 				esc_html( __( '&mdash; Select &mdash;', 'contact-form-7' ) )
 			);
 
