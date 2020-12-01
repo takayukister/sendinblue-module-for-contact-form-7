@@ -1,6 +1,6 @@
 # Sendinblue module for Contact Form 7
 
-This is a WordPress plugin that works as an add-on module for [Contact Form 7](https://wordpress.org/plugins/contact-form-7/). With this plugin, you can turn your contact forms into Sendinblue's signup forms, which will help you grow your contact list.
+This is a WordPress plugin that works as an add-on module for [Contact Form 7](https://wordpress.org/plugins/contact-form-7/). With this plugin, you can turn your contact forms into [Sendinblue](https://www.sendinblue.com/?tap_a=30591-fb13f0&tap_s=1031580-b1bb1d)'s signup forms, which will help you grow your contact list.
 
 
 ## Requirement
