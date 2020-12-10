@@ -5,7 +5,7 @@ This is a WordPress plugin that works as an add-on module for [Contact Form 7](h
 
 ## Requirement
 
-This plugin works with WordPress 5.4+ and Contact Form 7 5.3.
+This plugin works with WordPress 5.5+ and Contact Form 7 5.3.
 
 
 ## How to install
